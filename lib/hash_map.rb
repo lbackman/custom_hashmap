@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require_relative 'linked_list'
+
 class HashMap
   # attr_reader :bucket_amount
 
   def initialize
-    @hash = []
-    @bucket_amount = 16 # or some other appropriate value
+    @hash = Array.new(16, LinkedList.new)
+    @bucket_amount = @hash.size
+    @growth_factor = 0.8
   end
 
   def set(key, value)
