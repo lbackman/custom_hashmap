@@ -3,12 +3,13 @@
 require_relative 'linked_list'
 
 class HashMap
-  # attr_reader :bucket_amount
+  GROWTH_FACTOR = 0.8
+  attr_reader :hash, :bucket_amount, :amount_filled
 
   def initialize
     @hash = Array.new(16, LinkedList.new)
     @bucket_amount = @hash.size
-    @growth_factor = 0.8
+    @amount_filled = 0.0
   end
 
   def set(key, value)
@@ -54,5 +55,16 @@ class HashMap
   def hash(key)
     # produces an integer, and from the key and returns the modulo
     # of that integer with respect to the bucket amount
+    string = key.to_s
+    hash_code = 0
+    prime_number = 31
+
+    string.each_char { |char| hash_code = prime_number * hash_code + char.ord }
+
+    hash_code
+  end
+
+  def hash_index(key)
+    hash(key) % bucket_amount
   end
 end
