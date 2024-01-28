@@ -9,12 +9,21 @@ class HashMap
   def initialize
     @hash = Array.new(16, LinkedList.new)
     @bucket_amount = @hash.size
-    @amount_filled = 0.0
+    @amount_filled = 0
   end
 
   def set(key, value)
     # sets key value pair
     # increase bucket amount if necessary
+    index = hash_index(key)
+    list = hash[index]
+    if list.head.nil?
+      @amount_filled += 1
+    end
+    # set key-value pair
+    if amount_filled.to_f / bucket_amount > GROWTH_FACTOR
+      # grow_hash_table
+    end
   end
 
   def get(key)
