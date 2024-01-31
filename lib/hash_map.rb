@@ -3,31 +3,38 @@
 require_relative 'linked_list'
 
 class HashMap
-  GROWTH_FACTOR = 0.8
-  attr_reader :hash, :bucket_amount, :amount_filled
+  LOAD_FACTOR = 0.75
+  attr_reader :hash, :buckets_occupied
 
   def initialize
     @hash = Array.new(16, LinkedList.new)
-    @bucket_amount = @hash.size
-    @amount_filled = 0
+    @buckets_occupied = 0
   end
 
   def set(key, value)
     # sets key value pair
     # increase bucket amount if necessary
     index = hash_index(key)
-    list = hash[index]
-    if list.head.nil?
-      @amount_filled += 1
+    bucket = hash[index]
+    if bucket.head.nil?
+      @buckets_occupied += 1
     end
     # set key-value pair
-    if amount_filled.to_f / bucket_amount > GROWTH_FACTOR
+    bucket.add(key, value)
+    if buckets_occupied.to_f / hash.size > LOAD_FACTOR
       # grow_hash_table
     end
   end
 
   def get(key)
     #returns value associated with key, if not found returns nil
+    index = hash_index(key)
+    raise IndexError if index.negative? || index >= @hash.size
+
+    bucket = hash[index]
+    return nil if bucket.head.nil?
+
+    bucket.get(key)
   end
 
   def key?(key)
@@ -61,7 +68,7 @@ class HashMap
 
   private
 
-  def hash(key)
+  def hash_code(key)
     # produces an integer, and from the key and returns the modulo
     # of that integer with respect to the bucket amount
     string = key.to_s
@@ -74,6 +81,7 @@ class HashMap
   end
 
   def hash_index(key)
-    hash(key) % bucket_amount
+    # If the table has size 2^n, we can use "& (length - 1)" instead "% length"
+    hash_code(key) & hash.size - 1
   end
 end
