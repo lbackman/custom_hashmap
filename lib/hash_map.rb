@@ -7,7 +7,7 @@ class HashMap
   attr_reader :hash, :buckets_occupied
 
   def initialize
-    @hash = Array.new(16, LinkedList.new)
+    @hash = Array.new(16) { LinkedList.new }
     @buckets_occupied = 0
   end
 
@@ -39,31 +39,54 @@ class HashMap
 
   def key?(key)
     # return true/false depending on if key is in the hash map
+    index = hash_index(key)
+    hash[index].contains?(key)
   end
 
   def remove(key)
     # removes k-v pair and returns the value
     # if key not in hash, return nil
+    index = hash_index(key)
+    hash[index].remove(key)
   end
 
   def length
     # amount of keys in hash
+    @hash.map { |bucket| bucket.size }.sum
   end
 
   def clear
     # removes all entries
+    @hash.map { |bucket| bucket.remove_all }
   end
 
   def keys
     # return all keys as an array
+    keys = []
+    @hash.each do |bucket|
+      unless bucket.head.nil?
+        bucket.each { |node| keys << node.key }
+      end
+    end
+    keys
   end
 
   def values
     # return all entries as an array
+    values = []
+    @hash.each do |bucket|
+      bucket.each { |node| values << node.value }
+    end
+    values
   end
 
   def entries
     # return all k-v pairs as an array: [[k1, v1], [k2, v2], ... ]
+    entries = []
+    @hash.each do |bucket|
+      bucket.each { |node| entries << [node.key, node.value] }
+    end
+    entries
   end
 
   private
