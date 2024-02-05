@@ -7,8 +7,7 @@ class HashMap
   attr_reader :hash, :buckets_occupied
 
   def initialize
-    @hash = Array.new(16) { LinkedList.new }
-    @buckets_occupied = 0
+    set_up
   end
 
   def set(key, value)
@@ -57,7 +56,7 @@ class HashMap
 
   def clear
     # removes all entries
-    @hash.map { |bucket| bucket.remove_all }
+    set_up
   end
 
   def keys
@@ -90,6 +89,11 @@ class HashMap
   end
 
   private
+
+  def set_up
+    @hash = Array.new(16) { LinkedList.new }
+    @buckets_occupied = 0
+  end
 
   def hash_code(key)
     # produces an integer, and from the key and returns the modulo
