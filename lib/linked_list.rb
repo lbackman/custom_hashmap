@@ -19,14 +19,14 @@ class LinkedList
       until temp_node.next_node.nil?
         if temp_node.key == key
           temp_node.value = value
-          return [key, value]
+          return value
         end
         temp_node = temp_node.next_node
       end
       new_node = Node.new(key, value)
       temp_node.next_node = new_node
       @size += 1
-      [key, value]
+      value
     end
   end
 
